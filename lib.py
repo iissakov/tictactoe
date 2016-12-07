@@ -55,7 +55,6 @@ class Board(object):
         self.calculate_winners()
         self.game_over = False
 
-    
     def draw_lines(self):
         for i in range(1, self.grid_size):
             start_position = ((self.box_size * i) + (self.line_width * (i - 1))) + self.border
@@ -139,7 +138,7 @@ class Board(object):
     def display_game_over(self, winner):
         surface_size = self.surface.get_height()
         font = pygame.font.Font('freesansbold.ttf', int(surface_size / 8))
-        
+
         if winner:
             text = 'Player %s won!' % winner
             pygame.display.set_caption('Tic Tac Toe - Player %s Won' % winner)
