@@ -139,12 +139,14 @@ class Board(object):
     def display_game_over(self, winner):
         surface_size = self.surface.get_height()
         font = pygame.font.Font('freesansbold.ttf', int(surface_size / 8))
+        
         if winner:
             text = 'Player %s won!' % winner
             pygame.display.set_caption('Tic Tac Toe - Player %s Won' % winner)
         else:
             text = 'Draw!'
-            pygame.display.set_caption('Tic Tac Toe - Draw Game')
+            pygame.display.set_caption('Tic Tac Toe - Draw Game'
+                                       )
         text = font.render(text, True, BLACK, WHITE)
         rect = text.get_rect()
         rect.center = (surface_size / 2, surface_size / 2)
