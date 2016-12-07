@@ -1,4 +1,4 @@
-import pygame, itertools
+import pygame, itertools, time
 
 
 WHITE = (255, 255, 255)
@@ -12,6 +12,14 @@ class Box(object):
     state = 0
     
     def __init__(self, x, y, size, board):
+        """
+        Box where the x's and o's are drawn
+
+        :param x:
+        :param y:
+        :param size:
+        :param board:
+        """
         self.size = size
         self.line_width = int(self.size / 40) if self.size > 40 else 1
         self.radius = (self.size / 2) - (self.size / 8)
@@ -19,11 +27,11 @@ class Box(object):
         self.board = board
     
     def mark_x(self):
-        pygame.draw.line(self.board.surface, RED, (self.rect.centerx - self.radius, self.rect.centery - self.radius), (self.rect.centerx + self.radius, self.rect.centery + self.radius), self.line_width)
-        pygame.draw.line(self.board.surface, RED, (self.rect.centerx - self.radius, self.rect.centery + self.radius), (self.rect.centerx + self.radius, self.rect.centery - self.radius), self.line_width)
+        pygame.draw.line(self.board.surface, GREEN, (self.rect.centerx - self.radius, self.rect.centery - self.radius), (self.rect.centerx + self.radius, self.rect.centery + self.radius), self.line_width)
+        pygame.draw.line(self.board.surface, GREEN, (self.rect.centerx - self.radius, self.rect.centery + self.radius), (self.rect.centerx + self.radius, self.rect.centery - self.radius), self.line_width)
     
     def mark_o(self):
-        pygame.draw.circle(self.board.surface, BLUE, (self.rect.centerx, self.rect.centery), self.radius, self.line_width)
+        pygame.draw.circle(self.board.surface, RED, (int(self.rect.centerx), int(self.rect.centery)), int(self.radius), int(self.line_width))
 
 
 class Board(object):
@@ -36,22 +44,24 @@ class Board(object):
         self.line_width = line_width
         surface_size = (self.grid_size * self.box_size) + (self.border * 2) + (self.line_width * (self.grid_size - 1))
         self.surface = pygame.display.set_mode((surface_size, surface_size), 0, 32)
-        self.game_over = False
         self.setup()
+
         
     def setup(self):
-        pygame.display.set_caption('Tic Tac Toe')
-        self.surface.fill(WHITE)
+        pygame.display.set_caption('Tic Tac Toe - Player 1 Start')
+        self.surface.fill(BLACK)
         self.draw_lines()
         self.initialize_boxes()
         self.calculate_winners()
+        self.game_over = False
+
     
     def draw_lines(self):
-        for i in xrange(1, self.grid_size):
+        for i in range(1, self.grid_size):
             start_position = ((self.box_size * i) + (self.line_width * (i - 1))) + self.border
             width = self.surface.get_width() - (2 * self.border)
-            pygame.draw.rect(self.surface, BLACK, (start_position, self.border, self.line_width, width))
-            pygame.draw.rect(self.surface, BLACK, (self.border, start_position, width, self.line_width))
+            pygame.draw.rect(self.surface, WHITE, (start_position, self.border, self.line_width, width))
+            pygame.draw.rect(self.surface, WHITE, (self.border, start_position, width, self.line_width))
     
     def initialize_boxes(self):
         self.boxes = []
@@ -88,21 +98,22 @@ class Board(object):
             box.mark_o()
             box.state = 2
             self.turn = 1
+        pygame.display.set_caption('Tic Tac Toe - Player %d Turn' % self.turn)
         return
     
     def calculate_winners(self):
         self.winning_combinations = []
-        indices = [x for x in xrange(0, self.grid_size * self.grid_size)]
+        indices = [x for x in range(0, self.grid_size * self.grid_size)]
         
         # Vertical combinations
-        self.winning_combinations += ([tuple(indices[i:i+self.grid_size]) for i in xrange(0, len(indices), self.grid_size)])
+        self.winning_combinations += ([tuple(indices[i:i+self.grid_size]) for i in range(0, len(indices), self.grid_size)])
         
         # Horizontal combinations
-        self.winning_combinations += [tuple([indices[x] for x in xrange(y, len(indices), self.grid_size)]) for y in xrange(0, self.grid_size)]
+        self.winning_combinations += [tuple([indices[x] for x in range(y, len(indices), self.grid_size)]) for y in range(0, self.grid_size)]
         
         # Diagonal combinations
-        self.winning_combinations.append(tuple(x for x in xrange(0, len(indices), self.grid_size + 1)))
-        self.winning_combinations.append(tuple(x for x in xrange(self.grid_size - 1, len(indices), self.grid_size - 1)))
+        self.winning_combinations.append(tuple(x for x in range(0, len(indices), self.grid_size + 1)))
+        self.winning_combinations.append(tuple(x for x in range(self.grid_size - 1, len(indices), self.grid_size - 1)))
     
     def check_for_winner(self):
         winner = 0
@@ -127,12 +138,18 @@ class Board(object):
     
     def display_game_over(self, winner):
         surface_size = self.surface.get_height()
-        font = pygame.font.Font('freesansbold.ttf', surface_size / 8)
+        font = pygame.font.Font('freesansbold.ttf', int(surface_size / 8))
         if winner:
             text = 'Player %s won!' % winner
+            pygame.display.set_caption('Tic Tac Toe - Player %s Won' % winner)
         else:
             text = 'Draw!'
+            pygame.display.set_caption('Tic Tac Toe - Draw Game')
         text = font.render(text, True, BLACK, WHITE)
         rect = text.get_rect()
         rect.center = (surface_size / 2, surface_size / 2)
         self.surface.blit(text, rect)
+
+        pygame.display.update()
+        time.sleep(2)
+        self.setup()
