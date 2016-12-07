@@ -1,11 +1,10 @@
-## Tic Tac Toe
+## Class Project
 
-This is a simple version of Tic Tac Toe that I built to learn Pygame.
+class final project, using initial tic-tac-toe game: add functionality
 
-### To do
+# Added functionality
 
-* Option to create new game when the last game is finished.
-* Allow players to specify board size.
-* Allow players to change the colors of the board.
-* Add the computer as a player and allow players to choose an AI opponent.
-* Create an application instead of needing to run it via command line.
+*Different colors on the board
+*Playing sounds
+*Notifying the player whose turn it is
+*Option to end session or start new game once game has ended
