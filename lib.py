@@ -1,4 +1,4 @@
-import pygame, itertools, time
+import pygame, itertools, time, sys
 
 
 WHITE = (255, 255, 255)
@@ -6,6 +6,7 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
+YELLOW = (255, 255, 0)
 
 
 class Box(object):
@@ -85,7 +86,17 @@ class Board(object):
         if box is not None and not self.game_over:
             self.play_turn(box)
             self.check_game_over()
-    
+        if self.game_over:
+            self.ending_menu(x, y)
+
+    def ending_menu(self, x, y):
+        if self.rect1.collidepoint(x, y):
+            time.sleep(2)
+            self.setup()
+        elif self.rect2.collidepoint(x, y):
+            pygame.quit()
+            sys.exit()
+
     def play_turn(self, box):
         if box.state != 0:
             return
@@ -144,13 +155,22 @@ class Board(object):
             pygame.display.set_caption('Tic Tac Toe - Player %s Won' % winner)
         else:
             text = 'Draw!'
-            pygame.display.set_caption('Tic Tac Toe - Draw Game'
-                                       )
-        text = font.render(text, True, BLACK, WHITE)
+            pygame.display.set_caption('Tic Tac Toe - Draw Game')
+        text = font.render(text, True, YELLOW, BLUE)
         rect = text.get_rect()
         rect.center = (surface_size / 2, surface_size / 2)
         self.surface.blit(text, rect)
 
+        text1 = font.render("Play again", True, YELLOW, BLUE)
+        text2 = font.render("Quit", True, YELLOW, BLUE)
+
+        self.rect1 = text1.get_rect()
+        self.rect2 = text2.get_rect()
+        self.rect1.center = (surface_size / 2, surface_size / 4)
+        self.rect2.center = (surface_size / 2, (surface_size * 3 )/ 4)
+
         pygame.display.update()
         time.sleep(2)
-        self.setup()
+
+        self.surface.blit(text1, self.rect1)
+        self.surface.blit(text2, self.rect2)
