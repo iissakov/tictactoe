@@ -110,16 +110,25 @@ class Board(object):
             pygame.quit()
             sys.exit()
 
+    def play_sound(self):
+        if self.turn == 1 and not self.game_over:
+            pygame.mixer.music.load('limit.wav')
+        elif self.turn == 2 and not self.game_over:
+            pygame.mixer.music.load('bolt2.wav')
+        pygame.mixer.music.play()
+
     def play_turn(self, box):
         if box.state != 0:
             return
         if self.turn == 1:
             box.mark_x()
             box.state = 1
+            self.play_sound()
             self.turn = 2
         elif self.turn == 2:
             box.mark_o()
             box.state = 2
+            self.play_sound()
             self.turn = 1
         pygame.display.set_caption('Tic Tac Toe - Player %d Turn' % self.turn)
         return
@@ -172,6 +181,10 @@ class Board(object):
         text = font.render(text, True, YELLOW, BLUE)
         rect = text.get_rect()
         rect.center = (surface_size / 2, surface_size / 2)
+
+        pygame.mixer.music.load('victory.wav')
+        pygame.mixer.music.play()
+
         self.surface.blit(text, rect)
         self.display_end_menu()
 
