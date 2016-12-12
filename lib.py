@@ -49,6 +49,10 @@ class Board(object):
 
         
     def setup(self):
+        """
+        Initializes the board, including setting game_over variable to False
+        :return:
+        """
         pygame.display.set_caption('Tic Tac Toe - Player 1 Start')
         self.surface.fill(BLACK)
         self.draw_lines()
@@ -82,6 +86,12 @@ class Board(object):
         return None
     
     def process_click(self, x, y):
+        """
+        Checks if box is empty, if not fills it with an x or an o, then checks if game is over. if game is over calls ending_menu method
+        :param x: x position of cursor
+        :param y: y position of cursor
+        :return: nothing
+        """
         box = self.get_box_at_pixel(x, y)
         if box is not None and not self.game_over:
             self.play_turn(box)
@@ -90,6 +100,10 @@ class Board(object):
             self.ending_menu(x, y)
 
     def display_end_menu(self):
+        """
+        Makes rectangles that act as ending menu buttons with options -Play again- or -Quit game-
+        :return: nothing
+        """
         surface_size = self.surface.get_height()
         font = pygame.font.Font('freesansbold.ttf', int(surface_size / 16))
 
@@ -104,6 +118,13 @@ class Board(object):
         self.surface.blit(text2, self.rect2)
 
     def ending_menu(self, x, y):
+        """
+        Calls method if mouse cursor click falls within ending menu buttons, if -Play again- clicked, refreshes the game,
+        if -Quit game- clicked, exits the program
+        :param x: x position of cursor
+        :param y: y position of cursor
+        :return: nothing
+        """
         if self.rect1.collidepoint(x, y):
             self.setup()
         elif self.rect2.collidepoint(x, y):
@@ -111,6 +132,10 @@ class Board(object):
             sys.exit()
 
     def play_sound(self):
+        """
+        Loads the mixer with a sound corresponding to the player whose turn it is, then plays sound
+        :return:
+        """
         if self.turn == 1:
             pygame.mixer.music.load('limit.wav')
         elif self.turn == 2:
@@ -118,6 +143,12 @@ class Board(object):
         pygame.mixer.music.play()
 
     def play_turn(self, box):
+        """
+        Marks x or o if cursor clicks empty box, calls play_sound method with each drawn x or o
+        changes caption to display whose turn it currently is
+        :param box: box object
+        :return:
+        """
         if box.state != 0:
             return
         if self.turn == 1:
@@ -169,6 +200,11 @@ class Board(object):
             self.display_game_over(winner)
     
     def display_game_over(self, winner):
+        """
+        Makes rectangle to display game over, plays victory or draw sound
+        :param winner: Winner of game, type int = 1 or 2
+        :return:
+        """
         surface_size = self.surface.get_height()
         font = pygame.font.Font('freesansbold.ttf', int(surface_size / 8))
 
@@ -180,7 +216,7 @@ class Board(object):
             text = 'Draw!'
             pygame.display.set_caption('Tic Tac Toe - Draw Game')
             pygame.mixer.music.load('aww.wav')
-            
+
         text = font.render(text, True, YELLOW, BLUE)
         rect = text.get_rect()
         rect.center = (surface_size / 2, surface_size / 2)
