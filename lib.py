@@ -91,7 +91,7 @@ class Board(object):
 
     def ending_menu(self, x, y):
         if self.rect1.collidepoint(x, y):
-            time.sleep(2)
+            time.sleep(.25)
             self.setup()
         elif self.rect2.collidepoint(x, y):
             pygame.quit()
