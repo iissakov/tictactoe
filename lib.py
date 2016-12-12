@@ -89,9 +89,22 @@ class Board(object):
         if self.game_over:
             self.ending_menu(x, y)
 
+    def display_end_menu(self):
+        surface_size = self.surface.get_height()
+        font = pygame.font.Font('freesansbold.ttf', int(surface_size / 16))
+
+        text1 = font.render("Play again", True, YELLOW, BLUE)
+        text2 = font.render("Quit game", True, YELLOW, BLUE)
+
+        self.rect1 = text1.get_rect()
+        self.rect2 = text2.get_rect()
+        self.rect1.center = (surface_size / 3, surface_size / 12)
+        self.rect2.center = ((surface_size * 2) / 3, surface_size / 12)
+        self.surface.blit(text1, self.rect1)
+        self.surface.blit(text2, self.rect2)
+
     def ending_menu(self, x, y):
         if self.rect1.collidepoint(x, y):
-            time.sleep(.25)
             self.setup()
         elif self.rect2.collidepoint(x, y):
             pygame.quit()
@@ -160,17 +173,5 @@ class Board(object):
         rect = text.get_rect()
         rect.center = (surface_size / 2, surface_size / 2)
         self.surface.blit(text, rect)
+        self.display_end_menu()
 
-        text1 = font.render("Play again", True, YELLOW, BLUE)
-        text2 = font.render("Quit", True, YELLOW, BLUE)
-
-        self.rect1 = text1.get_rect()
-        self.rect2 = text2.get_rect()
-        self.rect1.center = (surface_size / 2, surface_size / 4)
-        self.rect2.center = (surface_size / 2, (surface_size * 3 )/ 4)
-
-        pygame.display.update()
-        time.sleep(2)
-
-        self.surface.blit(text1, self.rect1)
-        self.surface.blit(text2, self.rect2)
