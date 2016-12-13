@@ -1,4 +1,4 @@
-import pygame, itertools, time, sys
+import pygame, itertools, time, sys, unittest
 
 
 WHITE = (255, 255, 255)
@@ -226,3 +226,70 @@ class Board(object):
         self.surface.blit(text, rect)
         self.display_end_menu()
 
+class TicTacTest(unittest.TestCase):
+    def test_init(self):
+        """
+        Initializes board object with not default sizes, checks to see that the sizes are correct
+        :return:
+        """
+        board = Board(5, 100, 10, 3)
+        self.assertTrue(board.grid_size == 5)
+        self.assertFalse(board.box_size == 200)
+        self.assertTrue(board.border == 10)
+        self.assertTrue(board.line_width == 3)
+
+    def test_setup(self):
+        """
+        Initializes board object, checks to see if game_over initalized to 0
+        :return:
+        """
+        board = Board()
+        self.assertTrue(board.game_over == False)
+
+    def test_initialize_boxes(self):
+        """
+        Initializes board object, checks to see if there are 9 box objects, iteratures through self.boxes to make sure
+        all the items are box objects
+        :return:
+        """
+        board = Board()
+        self.assertTrue(len(board.boxes) == 9)
+        for i in board.boxes:
+            self.assertIsInstance(i, Box)
+
+    def test_get_box_at_pixel(self):
+        """
+        Initializes a board object, checks to see if pos 0,0 is a not a box and 30, 30 is a box
+        :return:
+        """
+        board = Board()
+        self.assertNotIsInstance(board.get_box_at_pixel(0, 0), Box)
+        self.assertIsInstance(board.get_box_at_pixel(30, 30), Box)
+
+    def test_process_click(self):
+        """
+        Initializes board object, plays a turn, checks to see if it is player two's turn
+        :return:
+        """
+        board = Board()
+        pygame.init()
+        board.process_click(30, 30)
+        self.assertTrue(board.turn == 2)
+
+    def test_play_sound(self):
+        """
+        Initializes a board object, calls the play sound method and checks if sound is playing, pauses for 3 seconds
+        to check if the sound isn't playing
+        :return:
+        """
+        board = Board()
+        pygame.init()
+        board.play_sound()
+        self.assertTrue(pygame.mixer.music.get_busy() == True)
+        time.sleep(3)
+        self.assertFalse(pygame.mixer.music.get_busy())
+
+
+if __name__ == "__main__":
+    unittest.main()
+    pygame.tests.run()
