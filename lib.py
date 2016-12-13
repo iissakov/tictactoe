@@ -266,16 +266,6 @@ class TicTacTest(unittest.TestCase):
         self.assertNotIsInstance(board.get_box_at_pixel(0, 0), Box)
         self.assertIsInstance(board.get_box_at_pixel(30, 30), Box)
 
-    def test_process_click(self):
-        """
-        Initializes board object, plays a turn, checks to see if it is player two's turn
-        :return:
-        """
-        board = Board()
-        pygame.init()
-        board.process_click(30, 30)
-        self.assertTrue(board.turn == 2)
-
     def test_play_sound(self):
         """
         Initializes a board object, calls the play sound method and checks if sound is playing, pauses for 3 seconds
@@ -289,7 +279,16 @@ class TicTacTest(unittest.TestCase):
         time.sleep(3)
         self.assertFalse(pygame.mixer.music.get_busy())
 
+    def test_process_click(self):
+        """
+        Initializes board object, plays a turn, checks to see if it is player two's turn
+        :return:
+        """
+        board = Board()
+        pygame.init()
+        board.process_click(30, 30)
+        self.assertTrue(board.turn == 2)
+
 
 if __name__ == "__main__":
     unittest.main()
-    pygame.tests.run()
