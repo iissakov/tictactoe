@@ -28,16 +28,27 @@ class Box(object):
         self.board = board
     
     def mark_x(self):
+        """
+        Draws an X in the box
+        :return:
+        """
         pygame.draw.line(self.board.surface, GREEN, (self.rect.centerx - self.radius, self.rect.centery - self.radius), (self.rect.centerx + self.radius, self.rect.centery + self.radius), self.line_width)
         pygame.draw.line(self.board.surface, GREEN, (self.rect.centerx - self.radius, self.rect.centery + self.radius), (self.rect.centerx + self.radius, self.rect.centery - self.radius), self.line_width)
     
     def mark_o(self):
+        """
+        Draws a circle in the box
+        :return:
+        """
         pygame.draw.circle(self.board.surface, RED, (int(self.rect.centerx), int(self.rect.centery)), int(self.radius), int(self.line_width))
 
 
 class Board(object):
+    """
+    An object of this class is the Tic Tac Toe board
+    """
     turn = 1
-    
+
     def __init__(self, grid_size=3, box_size=200, border=20, line_width=5):
         self.grid_size = grid_size
         self.box_size = box_size
@@ -61,6 +72,10 @@ class Board(object):
         self.game_over = False
 
     def draw_lines(self):
+        """
+        Draws the boundary lines for the tictactoe grid
+        :return:
+        """
         for i in range(1, self.grid_size):
             start_position = ((self.box_size * i) + (self.line_width * (i - 1))) + self.border
             width = self.surface.get_width() - (2 * self.border)
@@ -68,6 +83,10 @@ class Board(object):
             pygame.draw.rect(self.surface, WHITE, (self.border, start_position, width, self.line_width))
     
     def initialize_boxes(self):
+        """
+        Initializes 9 box objects to use for the grid
+        :return:
+        """
         self.boxes = []
         
         top_left_numbers = []
@@ -80,6 +99,12 @@ class Board(object):
             self.boxes.append(Box(x, y, self.box_size, self))
     
     def get_box_at_pixel(self, x, y):
+        """
+        Gets the box object referenced by the mouse cursor
+        :param x: x coordinate of cursor
+        :param y: y coordinate of cursor
+        :return: box object corresponding to mouseclick
+        """
         for index, box in enumerate(self.boxes):
             if box.rect.collidepoint(x, y):
                 return box
@@ -165,6 +190,10 @@ class Board(object):
         return
     
     def calculate_winners(self):
+        """
+        Calculates the winning combinations
+        :return:
+        """
         self.winning_combinations = []
         indices = [x for x in range(0, self.grid_size * self.grid_size)]
         
@@ -179,6 +208,10 @@ class Board(object):
         self.winning_combinations.append(tuple(x for x in range(self.grid_size - 1, len(indices), self.grid_size - 1)))
     
     def check_for_winner(self):
+        """
+        Checks to see if there is a winner
+        :return:
+        """
         winner = 0
         for combination in self.winning_combinations:
             states = []
@@ -191,6 +224,10 @@ class Board(object):
         return winner
     
     def check_game_over(self):
+        """
+        Checks to see if the win or draw condition has been met
+        :return:
+        """
         winner = self.check_for_winner()
         if winner:
             self.game_over = True
